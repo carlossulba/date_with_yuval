@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Our Day Together</title>
+  <meta name="description" content="A long-distance date for Carlos and Yuval.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-time="home">
+  <main class="wrap">
+    <header class="topbar">
+      <span></span>
+      <span class="status" data-state="connecting" role="status"><span class="dot"></span><span class="label">Connecting</span></span>
+    </header>
+
+    <section class="hero">
+      <h1>Carlos <span class="amp">&amp;</span> Yuval</h1>
+      <p class="lead">Our day together from afar. Open this on both phones: whatever one of us taps shows up for both, at the same moment.</p>
+      <div class="who-pick" id="whoPick">
+        <span class="label">I'm</span>
+      </div>
+    </section>
+
+    <nav class="chapters" aria-label="Parts of the day">
+      <a class="row" href="morning.html">
+        <span class="ico morning"><i class="ph ph-sun-horizon"></i></span>
+        <span>
+          <span class="time">Morning</span>
+          <h3>Yom Kippur reflection</h3>
+          <p>Reveal the letter and reflection questions one by one, together.</p>
+        </span>
+        <i class="ph ph-arrow-right go"></i>
+      </a>
+      <a class="row" href="midday.html">
+        <span class="ico midday"><i class="ph ph-sun"></i></span>
+        <span>
+          <span class="time">Midday</span>
+          <h3>Pick an adventure</h3>
+          <p>Each of us chooses an activity in secret, then we reveal our picks.</p>
+        </span>
+        <i class="ph ph-arrow-right go"></i>
+      </a>
+      <a class="row" href="night.html">
+        <span class="ico night"><i class="ph ph-moon-stars"></i></span>
+        <span>
+          <span class="time">Night</span>
+          <h3>Movie or painting</h3>
+          <p>Choose how to end the day, with shared countdowns to start in sync.</p>
+        </span>
+        <i class="ph ph-arrow-right go"></i>
+      </a>
+    </nav>
+
+    <p class="closing-line">What matters isn't following the plan to the letter, but creating a day that feels like ours.</p>
+    <div class="foot">
+      <a class="btn-link" href="guide.html">Read the full guide</a>
+    </div>
+  </main>
+
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/sync.js"></script>
+  <script>
+    const pick = document.getElementById('whoPick');
+    CONFIG.people.forEach(name => {
+      const b = document.createElement('button');
+      b.className = 'btn btn-ghost';
+      b.type = 'button';
+      b.textContent = name;
+      b.addEventListener('click', () => { App.setMe(name); paint(); });
+      pick.appendChild(b);
+    });
+    function paint() {
+      pick.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.textContent === App.me())));
+    }
+    paint();
+    App.mountStatus(document.querySelector('.status'));
+  </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Midday Adventure</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-time="midday">
+  <main class="wrap">
+    <div id="header"></div>
+
+    <section class="page-head">
+      <span class="kicker"><i class="ph ph-sun"></i> Midday</span>
+      <h1>Pick an adventure</h1>
+      <p class="lead">Choose just one, based on your mood, your energy and the weather. Your pick stays secret until you've both chosen.</p>
+      <p class="tip"><b>Weather plan:</b> if it's nice out, go for something outdoors. If it's raining or cold, try the cultural visit, dancing at home or an indoor pool.</p>
+    </section>
+
+    <div id="choice"></div>
+
+    <section class="section" id="plan" hidden></section>
+  </main>
+
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/sync.js"></script>
+  <script src="assets/js/choice.js"></script>
+  <script>
+    const OPTIONS = [
+      {
+        id: 'culture', icon: 'ph-bank', title: 'Cultural visit',
+        short: 'A museum, gallery or monument in each of our cities.',
+        text: 'Each of you visits a cultural spot in your own city (a museum, exhibition, gallery or monument). Share photos, fun facts and whatever catches your eye along the way.',
+      },
+      {
+        id: 'dance', icon: 'ph-music-notes', title: 'Dance challenge',
+        short: 'Learn the same choreography together and record it.',
+        text: 'Pick the same choreography, practice it together over video call and record the result. It doesn\'t need to be perfect: the fun is learning it at the same time.',
+      },
+      {
+        id: 'swim', icon: 'ph-swimming-pool', title: 'Swimming',
+        short: 'Indoor pool, each on our own, then a call to catch up.',
+        text: 'Go to an indoor pool and swim, each on your own. Afterwards, call each other to tell how it went.',
+        tip: 'Don\'t take your phone into the water.',
+      },
+      {
+        id: 'spot', icon: 'ph-tree', title: 'Favorite outdoor spot',
+        short: 'Our favorite places, a tasty snack and a video call.',
+        text: 'Each of you goes to your favorite place, ideally without revealing the destination beforehand. Buy something tasty on the way and enjoy it together over video call from your own spots.',
+      },
+      {
+        id: 'sport', icon: 'ph-person-simple-run', title: 'Outdoor sport',
+        short: 'Yoga, stretching, a walk or a gentle routine together.',
+        text: 'Do a shared activity that suits the weather: yoga, stretching, walking or a gentle routine.',
+        tip: 'If you choose archery, only do it at a safe, supervised facility.',
+      },
+    ];
+
+    const plan = document.getElementById('plan');
+
+    function showPlan(opt) {
+      if (!opt) { plan.hidden = true; return; }
+      plan.hidden = false;
+      plan.innerHTML = `
+        <div class="panel plan ${App.reducedMotion() ? '' : 'reveal'}">
+          <h3><i class="ph ${opt.icon}"></i> ${App.esc(opt.title)}</h3>
+          <p>${App.esc(opt.text)}</p>
+          ${opt.tip ? `<p class="tip"><b>Tip:</b> ${App.esc(opt.tip)}</p>` : ''}
+        </div>
+        <div class="panel plan">
+          <h3><i class="ph ph-camera"></i> Afterwards: a shared photo</h3>
+          <p>Each of you sets your phone on a timer and stands at one edge of the frame, leaving space towards the center. Then combine the two photos so it looks like you're standing together.</p>
+          <p class="tip"><b>Tip:</b> match the camera height, pose and lighting so the montage looks natural.</p>
+        </div>
+        <div class="panel plan">
+          <h3><i class="ph ph-shopping-cart"></i> On the way home: shopping</h3>
+          <p>Agree on an easy recipe for a quick dinner you can both make, and buy the ingredients. If painting might happen tonight, grab two canvases, paints, brushes and palettes, plus cups for water and paper to protect the table.</p>
+          <div class="actions"><a class="btn btn-ghost" href="night.html">On to the night <i class="ph ph-arrow-right"></i></a></div>
+        </div>`;
+    }
+
+    App.mountHeader(document.getElementById('header'));
+    App.requireMe(() => {
+      mountChoice(document.getElementById('choice'), { page: 'midday', options: OPTIONS, onDecided: showPlan });
+    });
+  </script>
+</body>
+</html>

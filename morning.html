@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Morning Reflection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-time="morning">
+  <main class="wrap">
+    <div id="header"></div>
+
+    <section class="page-head">
+      <span class="kicker"><i class="ph ph-sun-horizon"></i> Morning</span>
+      <h1>Yom Kippur: reflection and letter</h1>
+    </section>
+
+    <section class="panel" id="stage" aria-live="polite"></section>
+
+    <section class="controls" id="controls"></section>
+  </main>
+
+  <div class="overlay" id="overlay" hidden>
+    <div>
+      <div class="n" id="overlayN">3</div>
+      <p class="cap">Next question</p>
+    </div>
+  </div>
+
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/sync.js"></script>
+  <script src="assets/js/morning.js"></script>
+</body>
+</html>
