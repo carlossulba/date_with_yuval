@@ -3,7 +3,7 @@
 const CONFIG = {
   people: ['Carlos', 'Yuval'],
   // Both phones join this room automatically. Change it to anything else for a completely fresh start.
-  room: 'cita-carlos-yuval-r8m2kq7vzt',
+  room: 'cita-carlos-yuval-83lc3efjbk',
 };
 
 // Opening any page with ?room=something switches this browser to another room (handy for a test run).
