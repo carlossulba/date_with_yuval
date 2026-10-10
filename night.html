@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Movie or Painting</title>
+  <title>End of the Day</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
@@ -16,9 +16,8 @@
 
     <section class="page-head">
       <span class="kicker"><i class="ph ph-moon-stars"></i> Night</span>
-      <h1>Movie or painting?</h1>
-      <p class="lead">First, cook the same recipe at the same time and sit down to dinner together. Then pick how to end the day.</p>
-      <p class="tip"><b>Tip:</b> keep the phone somewhere stable while you cook, away from the stove, water and knives.</p>
+      <h1>How to end the day</h1>
+      <p class="lead">Cook and eat together first. Then each of us picks in secret.</p>
     </section>
 
     <div id="choice"></div>
@@ -34,11 +33,11 @@
     const OPTIONS = [
       {
         id: 'movie', icon: 'ph-film-slate', title: 'Watch a movie',
-        short: 'Popcorn, favorite drinks and pressing play at the same second.',
+        short: 'Popcorn and play at the same second.',
       },
       {
         id: 'paint', icon: 'ph-paint-brush', title: 'Paint each other',
-        short: 'A portrait of each other, realistic or completely silly.',
+        short: 'A portrait of each other.',
       },
     ];
 
@@ -53,33 +52,31 @@
         plan.innerHTML = `
           <div class="panel plan ${anim}">
             <h3><i class="ph ph-film-slate"></i> Movie night</h3>
-            <p>Choose a movie, load it on both screens and get popcorn and your favorite drinks ready. When you're set, one of you starts the countdown below and you both press play when it hits zero.</p>
-            <p class="tip"><b>Tip:</b> no commenting on big scenes until you've both seen them.</p>
+            <p>Pick a movie and get the popcorn ready.</p>
           </div>
           <div class="panel" id="playTimer"></div>
           <div class="panel plan">
             <h3><i class="ph ph-heart"></i> When the credits roll</h3>
-            <p>Tell each other which moment of the day you liked most, and what you'd love to repeat on another date.</p>
+            <p>Best moment of the day?</p>
           </div>`;
         mountCountdown(document.getElementById('playTimer'), {
-          page: 'night', slot: 'play', title: 'Press play together', idle: 'Paused at the start? Then start the countdown.',
+          page: 'night', slot: 'play', title: 'Press play together', idle: 'Both ready? Start the countdown.',
           presets: [{ label: 'Count down from 5', icon: 'ph-play', seconds: 5, doneText: 'Press play now!' }],
         });
       } else {
         plan.innerHTML = `
           <div class="panel plan ${anim}">
             <h3><i class="ph ph-paint-brush"></i> Paint each other</h3>
-            <p>With the canvases and paints ready, paint a portrait of each other. Try to be realistic, or turn it into something funny. When you're done, show your works on camera and keep them as a memento.</p>
-            <p class="tip"><b>Tip:</b> don't aim for perfect. Put a song on and enjoy each other's reactions.</p>
+            <p>Realistic or silly, both count.</p>
           </div>
           <div class="panel" id="paintTimer"></div>
           <div class="panel" id="revealTimer"></div>
           <div class="panel plan">
             <h3><i class="ph ph-heart"></i> To end the day</h3>
-            <p>Tell each other which moment of the day you liked most, and what you'd love to repeat on another date.</p>
+            <p>Best moment of the day?</p>
           </div>`;
         mountCountdown(document.getElementById('paintTimer'), {
-          page: 'night', slot: 'paint', title: 'Painting time', idle: 'Start a shared timer so you both put the brushes down together.',
+          page: 'night', slot: 'paint', title: 'Painting time', idle: 'Start a shared timer.',
           presets: [
             { label: '20 min', icon: 'ph-timer', seconds: 20 * 60, doneText: 'Brushes down!' },
             { label: '30 min', seconds: 30 * 60, doneText: 'Brushes down!' },
@@ -87,7 +84,7 @@
           ],
         });
         mountCountdown(document.getElementById('revealTimer'), {
-          page: 'night', slot: 'reveal', title: 'The big reveal', idle: 'Hide your canvas, then count down and show it at the same time.',
+          page: 'night', slot: 'reveal', title: 'The big reveal', idle: 'Hide your canvas until zero.',
           presets: [{ label: 'Reveal in 3, 2, 1', icon: 'ph-eye', seconds: 3, doneText: 'Turn your canvas to the camera!' }],
         });
       }
@@ -95,7 +92,7 @@
 
     App.mountHeader(document.getElementById('header'));
     App.requireMe(() => {
-      mountChoice(document.getElementById('choice'), { page: 'night', options: OPTIONS, big: true, onDecided: showPlan });
+      mountChoice(document.getElementById('choice'), { page: 'night', options: OPTIONS, onDecided: showPlan });
     });
   </script>
 </body>

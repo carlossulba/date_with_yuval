@@ -1,7 +1,7 @@
 /*
   Morning: the reflection questions, revealed one at a time.
   A question only appears once BOTH of you tap "ready", and then it appears on both phones at once.
-  Notes typed here stay private on each phone.
+  Answers are written by hand, on card stock.
 */
 const PAGE = 'morning';
 
@@ -45,10 +45,6 @@ const controls = document.getElementById('controls');
 const overlay = document.getElementById('overlay');
 const overlayN = document.getElementById('overlayN');
 
-const noteKey = q => `cita:notes:${App.me()}:${q}`;
-const getNote = q => { try { return localStorage.getItem(noteKey(q)) || ''; } catch { return ''; } };
-const setNote = (q, v) => { try { localStorage.setItem(noteKey(q), v); } catch {} };
-
 let shownQ = null;
 let counting = false;
 let targetQ = null;
@@ -67,36 +63,20 @@ function drawStep(q, animate) {
     stage.innerHTML = `
       <div class="${cls}" style="display:grid;gap:14px">
         <h2>Before we begin</h2>
-        <p>Follow whatever plan you have for Yom Kippur, and find a quiet moment for this. There are ${N} questions: three for a letter about us, then a personal reflection on the past, the present and the future.</p>
-        <p>Each question appears on both phones at the same time, only once you've <b>both</b> tapped ready. Write your answers privately below each one, then share whatever you feel like.</p>
+        <p>${N} questions. Have five pieces of card stock ready.</p>
       </div>`;
   } else if (q >= N) {
-    const answers = QUESTIONS.map((x, i) => ({ ...x, a: getNote(i).trim() })).filter(x => x.a);
     stage.innerHTML = `
       <div class="${cls}" style="display:grid;gap:16px">
         <h2>To close</h2>
-        <p class="q-text">Write your guiding word or phrase beautifully on a piece of card, and leave it somewhere visible as a reminder for the new year.</p>
-        <div class="section" style="margin-top:18px">
-          <h3>My answers</h3>
-          ${answers.length
-            ? `<div class="answers">${answers.map(x => `<div><div class="a-q">${App.esc(x.t)}</div><div class="a-a">${App.esc(x.a)}</div></div>`).join('')}</div>`
-            : `<p class="muted">You didn't write anything down here, and that's fine. The best answers are sometimes the ones said out loud.</p>`}
-        </div>
+        <p class="q-text">Write your guiding word or phrase on a card and put it somewhere you'll see it.</p>
       </div>`;
   } else {
     const x = QUESTIONS[q];
     stage.innerHTML = `
       ${progressBar(q)}
       <div class="q-meta"><b>${App.esc(x.s)}</b><span>Question ${q + 1} of ${N}</span></div>
-      <p class="q-text ${cls}">${App.esc(x.t)}</p>
-      <div class="notes">
-        <label for="note">My answer</label>
-        <textarea id="note" placeholder="Write freely, nobody else can see this."></textarea>
-        <span class="helper">Saved only on this phone.</span>
-      </div>`;
-    const ta = stage.querySelector('#note');
-    ta.value = getNote(q);
-    ta.addEventListener('input', () => setNote(q, ta.value));
+      <p class="q-text ${cls}">${App.esc(x.t)}</p>`;
   }
 }
 
@@ -108,8 +88,7 @@ function drawControls(st) {
   if (q >= N) {
     controls.innerHTML = `
       <div class="actions">
-        <button class="btn btn-primary" data-act="copy"><i class="ph ph-copy"></i> Copy my answers</button>
-        <a class="btn btn-ghost" href="midday.html">On to midday <i class="ph ph-arrow-right"></i></a>
+        <a class="btn btn-primary" href="midday.html">On to midday <i class="ph ph-arrow-right"></i></a>
       </div>
       <div class="actions">
         <button class="btn-link" data-act="back">Back to the last question</button>
@@ -149,17 +128,8 @@ controls.addEventListener('click', e => {
     case 'reset':
       if (confirm('Start the questions over for both of you? Your notes stay saved.')) Sync.publish({ page: PAGE, k: 'reset' });
       break;
-    case 'copy': copyAnswers(b); break;
   }
 });
-
-function copyAnswers(btn) {
-  const text = QUESTIONS.map((x, i) => `${x.t}\n${getNote(i).trim() || '-'}`).join('\n\n');
-  navigator.clipboard.writeText(text).then(
-    () => { btn.innerHTML = '<i class="ph ph-check"></i> Copied'; },
-    () => { btn.textContent = 'Could not copy'; }
-  );
-}
 
 // 3, 2, 1 on both phones, then the question fades in.
 function runCountdown(done) {

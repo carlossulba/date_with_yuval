@@ -4,7 +4,7 @@
   until you've both chosen. Then both picks are revealed on both phones at once.
   If they differ, you can settle it together (or flip a coin that both phones see).
 */
-function mountChoice(root, { page, options, big = false, onDecided }) {
+function mountChoice(root, { page, options, layout = 'grid', onDecided }) {
   const byId = id => options.find(o => o.id === id);
   let lastDecided;
 
@@ -22,12 +22,15 @@ function mountChoice(root, { page, options, big = false, onDecided }) {
   }
 
   root.innerHTML = `
-    <div class="opts ${big ? 'big' : ''}" role="group" aria-label="Options">
+    <div class="opts ${layout}" role="group" aria-label="Options">
       ${options.map(o => `
         <button class="opt" type="button" data-opt="${o.id}" aria-pressed="false">
-          <i class="ph ${o.icon}"></i>
-          <span class="t">${App.esc(o.title)}</span>
-          <span class="d">${App.esc(o.short)}</span>
+          ${o.img ? `<img src="${o.img}" alt="" loading="lazy">` : `<i class="ph ${o.icon}"></i>`}
+          <span class="txt">
+            <span class="t">${App.esc(o.title)}</span>
+            <span class="d">${App.esc(o.short)}</span>
+          </span>
+          <i class="ph-fill ph-check-circle tick" aria-hidden="true"></i>
         </button>`).join('')}
     </div>
     <div class="choice-status" data-status></div>
@@ -51,11 +54,11 @@ function mountChoice(root, { page, options, big = false, onDecided }) {
     if (!st.both) {
       statusEl.innerHTML = `
         <p>${mine
-          ? `<i class="ph ph-check-circle"></i> You picked <b>${App.esc(byId(mine).title)}</b>. You can still change it.`
-          : `<i class="ph ph-hand-pointing"></i> Tap the one you'd love most.`}</p>
+          ? `<i class="ph ph-check-circle"></i> You picked <b>${App.esc(byId(mine).title)}</b>.`
+          : `<i class="ph ph-hand-pointing"></i> Tap your favorite.`}</p>
         <p class="muted">${st.picks[partner]
-          ? `<i class="ph ph-lock-simple"></i> ${App.esc(partner)} has picked. It stays secret until you choose too.`
-          : `<i class="ph ph-hourglass"></i> ${App.esc(partner)} is still choosing.`}</p>`;
+          ? `<i class="ph ph-lock-simple"></i> ${App.esc(partner)} has picked (secret).`
+          : `<i class="ph ph-hourglass"></i> ${App.esc(partner)} is choosing.`}</p>`;
       revealEl.hidden = true;
       wasBoth = false;
     } else {
@@ -68,14 +71,18 @@ function mountChoice(root, { page, options, big = false, onDecided }) {
       const animate = wasBoth === false && !App.reducedMotion();
       revealEl.innerHTML = `
         <div class="picks ${animate ? 'reveal' : ''}">
-          <div class="pick"><div class="who">${App.esc(a)} picked</div><div class="what"><i class="ph ${pa.icon}"></i>${App.esc(pa.title)}</div></div>
-          <div class="pick"><div class="who">${App.esc(b)} picked</div><div class="what"><i class="ph ${pb.icon}"></i>${App.esc(pb.title)}</div></div>
+          ${[[a, pa], [b, pb]].map(([who, o]) => `
+          <div class="pick">
+            ${o.img ? `<img src="${o.img}" alt="">` : ''}
+            <div class="who">${App.esc(who)} picked</div>
+            <div class="what">${o.img ? '' : `<i class="ph ${o.icon}"></i>`}${App.esc(o.title)}</div>
+          </div>`).join('')}
         </div>
         ${matched
-          ? `<p class="verdict">Same choice. It's decided.</p>`
+          ? `<p class="verdict">Same pick!</p>`
           : st.decided
             ? `<p class="verdict">Going with ${App.esc(byId(st.decided).title)}.</p>`
-            : `<p>Different picks. Talk it over and choose one, or let a coin decide for you.</p>
+            : `<p>Different picks. Choose one, or flip a coin.</p>
                <div class="actions">
                  <button class="btn btn-ghost" data-final="${pa.id}">${App.esc(pa.title)}</button>
                  <button class="btn btn-ghost" data-final="${pb.id}">${App.esc(pb.title)}</button>
